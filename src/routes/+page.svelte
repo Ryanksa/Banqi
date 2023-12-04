@@ -1,5 +1,5 @@
 <svelte:head>
-  <title>暗棋</title>
+  <title>半棋</title>
 </svelte:head>
 
 <script lang="ts">
@@ -32,7 +32,7 @@ import Wheel from "../components/wheel.svelte";
 
 <div class="container">
   <div class="header">
-    <div>暗</div>
+    <div>半</div>
     <Wheel
       isActive={isWheelActive}
       isBlackActive={isBlackActive}

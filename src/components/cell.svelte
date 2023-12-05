@@ -13,6 +13,7 @@
     bottomRightCorner?: boolean;
     leftLineAcross?: boolean;
     rightLineAcross?: boolean;
+    children?: any; // stops TS from complaining
   }>();
 </script>
 
@@ -57,6 +58,9 @@
       style:display={rightLineAcross ? "block" : "none"}
     />
   </svg>
+  <div class="content">
+    <slot />
+  </div>
 </div>
 
 <style>
@@ -65,5 +69,16 @@
     height: 90px;
     background-color: var(--wood);
     border: 2px solid black;
+    position: relative;
+  }
+
+  .content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
   }
 </style>

@@ -1,25 +1,27 @@
 <script lang="ts">
   let {
-    onClick,
     topLeftCorner,
     topRightCorner,
     bottomLeftCorner,
     bottomRightCorner,
     leftLineAcross,
     rightLineAcross,
+    onClick,
+    highlighted,
   } = $props<{
-    onClick?: () => void;
     topLeftCorner?: boolean;
     topRightCorner?: boolean;
     bottomLeftCorner?: boolean;
     bottomRightCorner?: boolean;
     leftLineAcross?: boolean;
     rightLineAcross?: boolean;
+    onClick?: () => void;
+    highlighted?: boolean;
     children?: any; // stops TS from complaining
   }>();
 </script>
 
-<div class="cell" on:click={onClick}>
+<div class="cell" class:highlighted on:click={onClick}>
   <svg width="90px" height="90px">
     <path
       d="M5 20 L5 5 L20 5"
@@ -72,6 +74,10 @@
     background-color: var(--wood);
     border: 2px solid black;
     position: relative;
+  }
+
+  .cell.highlighted {
+    background-color: var(--highlight);
   }
 
   .content {

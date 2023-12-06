@@ -2,8 +2,9 @@
 	import type { ChessPiece } from "../lib/chess";
 	import { getRandomInt } from "../lib/utils";
 
-  let { piece, dropDown, floatUp } = $props<{
+  let { piece, highlighted, dropDown, floatUp } = $props<{
     piece: ChessPiece, 
+    highlighted?: boolean,
     dropDown?: boolean,
     floatUp?: boolean,
   }>();
@@ -16,7 +17,8 @@
 </script>
 
 <div 
-  class="container" 
+  class="container"
+  class:highlighted
   class:drop-down={dropDown}
   class:float-up={floatUp}
   style:--x={x}
@@ -24,7 +26,10 @@
   style:--z={z}
   style:--a={`${a}deg`}
 >
-  <div class="piece" style:transform={piece.isHidden ? "rotateX(-165deg)" : "rotateX(15deg)"}>
+  <div
+    class="piece"
+    style:transform={piece.isHidden ? "rotateX(-165deg)" : "rotateX(15deg)"}
+  >
     <div class="bottom" />
     {#each {length: 36} as _}
       <div class="side" />
@@ -39,6 +44,12 @@
   .container {
     position: relative;
     transform-style: preserve-3d;
+  }
+  
+  .container.highlighted {
+    transition: bottom 300ms, transform 300ms;
+    bottom: 15px;
+    transform: rotateX(12deg);
   }
 
   .container.drop-down {

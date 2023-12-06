@@ -63,7 +63,7 @@ export enum ChessPieceColour {
 	RED = 'RED'
 }
 
-export type Coord = { x: number; y: number };
+export type Coord = { row: number; col: number };
 
 export const shuffleBoard = (boardPieces: (ChessPiece | null)[]): (ChessPiece | null)[][] => {
 	for (let i = boardPieces.length - 1; i > 0; i--) {
@@ -80,4 +80,12 @@ export const shuffleBoard = (boardPieces: (ChessPiece | null)[]): (ChessPiece | 
 	shuffledBoard.push(boardPieces.slice(24, 32));
 
 	return shuffledBoard;
+};
+
+export const coordsEq = (coord1: Coord, coord2: Coord): boolean => {
+	return coord1.row === coord2.row && coord1.col === coord2.col;
+};
+
+export const coordsIn = (coordsArr: Coord[], coord: Coord): boolean => {
+	return coordsArr.findIndex((c) => coordsEq(c, coord)) >= 0;
 };

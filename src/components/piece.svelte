@@ -1,10 +1,29 @@
 <script lang="ts">
-	import type { ChessPiece } from "../entities/piece";
+	import type { ChessPiece } from "../lib/piece";
+	import { getRandomInt } from "../lib/utils";
 
-  let { piece } = $props<{piece: ChessPiece}>();
+  let { piece, dropDown, floatUp } = $props<{
+    piece: ChessPiece, 
+    dropDown?: boolean,
+    floatUp?: boolean,
+  }>();
+
+  // Random rotation when dropping / floating
+  const x = getRandomInt(0, 7);
+  const y = getRandomInt(0, 7);
+  const z = getRandomInt(0, 7);
+  const a = getRandomInt(0, 361);
 </script>
 
-<div class="container">
+<div 
+  class="container" 
+  class:drop-down={dropDown}
+  class:float-up={floatUp}
+  style:--x={x}
+  style:--y={y}
+  style:--z={z}
+  style:--a={`${a}deg`}
+>
   <div class="piece" style:transform={piece.isHidden ? "rotateX(-165deg)" : "rotateX(15deg)"}>
     <div class="bottom" />
     {#each {length: 36} as _}
@@ -18,7 +37,16 @@
 
 <style lang="scss">
   .container {
+    position: relative;
     transform-style: preserve-3d;
+  }
+
+  .container.drop-down {
+    animation: drop-down 900ms ease-out;
+  }
+
+  .container.float-up {
+    animation: float-up 1200ms ease-in forwards;
   }
 
   .piece {
@@ -27,7 +55,6 @@
     width: 60px;
     height: 60px;
     transition: transform 750ms;
-    transform: rotateX(15deg);
   }
 
   .top {
@@ -68,6 +95,48 @@
   @for $i from 1 through 37 {
     .side:nth-child(#{$i}) {
       --ry: #{($i - 1) * 10}deg;
+    }
+  }
+
+  @keyframes drop-down {
+    0% {
+      bottom: 120px;
+      transform: rotate3d(var(--x), var(--y), var(--z), var(--a));
+    }
+    50% {
+      bottom: 6px;
+      transform: rotate3d(2, 3, 1, -30deg);
+    }
+    60% {
+      bottom: 4.5px;
+      transform: rotate3d(2, -1, 0, 24deg);
+    }
+    75% {
+      bottom: 3px;
+      transform: rotate3d(3, 1, 0, 24deg);
+    }
+    90% {
+      bottom: 1.5px;
+      transform: rotate3d(3, 1, 0, 6deg);
+    }
+    100% {
+      bottom: 0;
+      transform: rotate3d(0, 0, 0, 0deg);
+    }
+  }
+
+  @keyframes float-up {
+    0% {
+      bottom: 0px;
+      transform: rotate3d(0, 0, 0, 0deg);
+    }
+    99% {
+      bottom: 180px;
+      transform: rotate3d(var(--x), var(--y), var(--z), var(--a));
+    }
+    100% {
+      bottom: 100vh;
+      transform: none;
     }
   }
 </style>

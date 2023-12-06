@@ -1,170 +1,170 @@
-<script>
-	import { shuffleBoard } from '../entities/piece';
+<script lang="ts">
+	import { shuffleBoard } from '../lib/piece';
 	import Cell from './cell.svelte';
 	import Piece from './piece.svelte';
 
-	const board = shuffleBoard();
+	const board = $state(shuffleBoard());
 </script>
 
 <div class="container">
 	<Cell bottomLeftCorner>
 		{#if board[0][0] != null}
-			<Piece piece={board[0][0]} />
+			<Piece dropDown piece={board[0][0]} />
 		{/if}
 	</Cell>
 	<Cell bottomRightCorner>
 		{#if board[0][1] != null}
-			<Piece piece={board[0][1]} />
+			<Piece dropDown piece={board[0][1]} />
 		{/if}
 	</Cell>
 	<Cell bottomLeftCorner>
 		{#if board[0][2] != null}
-			<Piece piece={board[0][2]} />
+			<Piece dropDown piece={board[0][2]} />
 		{/if}
 	</Cell>
 	<Cell bottomRightCorner>
 		{#if board[0][3] != null}
-			<Piece piece={board[0][3]} />
+			<Piece dropDown piece={board[0][3]} />
 		{/if}
 	</Cell>
 	<Cell bottomLeftCorner>
 		{#if board[0][4] != null}
-			<Piece piece={board[0][4]} />
+			<Piece dropDown piece={board[0][4]} />
 		{/if}
 	</Cell>
 	<Cell bottomRightCorner>
 		{#if board[0][5] != null}
-			<Piece piece={board[0][5]} />
+			<Piece dropDown piece={board[0][5]} />
 		{/if}
 	</Cell>
 	<Cell bottomLeftCorner>
 		{#if board[0][6] != null}
-			<Piece piece={board[0][6]} />
+			<Piece dropDown piece={board[0][6]} />
 		{/if}
 	</Cell>
 	<Cell bottomRightCorner>
 		{#if board[0][7] != null}
-			<Piece piece={board[0][7]} />
+			<Piece dropDown piece={board[0][7]} />
 		{/if}
 	</Cell>
 	<Cell topLeftCorner bottomRightCorner>
 		{#if board[1][0] != null}
-			<Piece piece={board[1][0]} />
+			<Piece dropDown piece={board[1][0]} />
 		{/if}
 	</Cell>
 	<Cell topRightCorner bottomLeftCorner>
 		{#if board[1][1] != null}
-			<Piece piece={board[1][1]} />
+			<Piece dropDown piece={board[1][1]} />
 		{/if}
 	</Cell>
 	<Cell topLeftCorner>
 		{#if board[1][2] != null}
-			<Piece piece={board[1][2]} />
+			<Piece dropDown piece={board[1][2]} />
 		{/if}
 	</Cell>
 	<Cell topRightCorner>
 		{#if board[1][3] != null}
-			<Piece piece={board[1][3]} />
+			<Piece dropDown piece={board[1][3]} />
 		{/if}
 	</Cell>
 	<Cell topLeftCorner>
 		{#if board[1][4] != null}
-			<Piece piece={board[1][4]} />
+			<Piece dropDown piece={board[1][4]} />
 		{/if}
 	</Cell>
 	<Cell topRightCorner>
 		{#if board[1][5] != null}
-			<Piece piece={board[1][5]} />
+			<Piece dropDown piece={board[1][5]} />
 		{/if}
 	</Cell>
 	<Cell topLeftCorner bottomRightCorner>
 		{#if board[1][6] != null}
-			<Piece piece={board[1][6]} />
+			<Piece dropDown piece={board[1][6]} />
 		{/if}
 	</Cell>
 	<Cell topRightCorner bottomLeftCorner>
 		{#if board[1][7] != null}
-			<Piece piece={board[1][7]} />
+			<Piece dropDown piece={board[1][7]} />
 		{/if}
 	</Cell>
 	<Cell topRightCorner>
 		{#if board[2][0] != null}
-			<Piece piece={board[2][0]} />
+			<Piece dropDown piece={board[2][0]} />
 		{/if}
 	</Cell>
 	<Cell topLeftCorner>
 		{#if board[2][1] != null}
-			<Piece piece={board[2][1]} />
+			<Piece dropDown piece={board[2][1]} />
 		{/if}
 	</Cell>
 	<Cell>
 		{#if board[2][2] != null}
-			<Piece piece={board[2][2]} />
+			<Piece dropDown piece={board[2][2]} />
 		{/if}
 	</Cell>
 	<Cell leftLineAcross>
 		{#if board[2][3] != null}
-			<Piece piece={board[2][3]} />
+			<Piece dropDown piece={board[2][3]} />
 		{/if}
 	</Cell>
 	<Cell rightLineAcross>
 		{#if board[2][4] != null}
-			<Piece piece={board[2][4]} />
+			<Piece dropDown piece={board[2][4]} />
 		{/if}
 	</Cell>
 	<Cell>
 		{#if board[2][5] != null}
-			<Piece piece={board[2][5]} />
+			<Piece dropDown piece={board[2][5]} />
 		{/if}
 	</Cell>
 	<Cell topRightCorner>
 		{#if board[2][6] != null}
-			<Piece piece={board[2][6]} />
+			<Piece dropDown piece={board[2][6]} />
 		{/if}
 	</Cell>
 	<Cell topLeftCorner>
 		{#if board[2][7] != null}
-			<Piece piece={board[2][7]} />
+			<Piece dropDown piece={board[2][7]} />
 		{/if}
 	</Cell>
 	<Cell>
 		{#if board[3][0] != null}
-			<Piece piece={board[3][0]} />
+			<Piece dropDown piece={board[3][0]} />
 		{/if}
 	</Cell>
 	<Cell>
 		{#if board[3][1] != null}
-			<Piece piece={board[3][1]} />
+			<Piece dropDown piece={board[3][1]} />
 		{/if}
 	</Cell>
 	<Cell>
 		{#if board[3][2] != null}
-			<Piece piece={board[3][2]} />
+			<Piece dropDown piece={board[3][2]} />
 		{/if}
 	</Cell>
 	<Cell rightLineAcross>
 		{#if board[3][3] != null}
-			<Piece piece={board[3][3]} />
+			<Piece dropDown piece={board[3][3]} />
 		{/if}
 	</Cell>
 	<Cell leftLineAcross>
 		{#if board[3][4] != null}
-			<Piece piece={board[3][4]} />
+			<Piece dropDown piece={board[3][4]} />
 		{/if}
 	</Cell>
 	<Cell>
 		{#if board[3][5] != null}
-			<Piece piece={board[3][5]} />
+			<Piece dropDown piece={board[3][5]} />
 		{/if}
 	</Cell>
 	<Cell>
 		{#if board[3][6] != null}
-			<Piece piece={board[3][6]} />
+			<Piece dropDown piece={board[3][6]} />
 		{/if}
 	</Cell>
 	<Cell>
 		{#if board[3][7] != null}
-			<Piece piece={board[3][7]} />
+			<Piece dropDown piece={board[3][7]} />
 		{/if}
 	</Cell>
 </div>

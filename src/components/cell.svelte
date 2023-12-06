@@ -1,5 +1,6 @@
 <script lang="ts">
   let {
+    onClick,
     topLeftCorner,
     topRightCorner,
     bottomLeftCorner,
@@ -7,6 +8,7 @@
     leftLineAcross,
     rightLineAcross,
   } = $props<{
+    onClick?: () => void;
     topLeftCorner?: boolean;
     topRightCorner?: boolean;
     bottomLeftCorner?: boolean;
@@ -17,7 +19,7 @@
   }>();
 </script>
 
-<div class="cell">
+<div class="cell" on:click={onClick}>
   <svg width="90px" height="90px">
     <path
       d="M5 20 L5 5 L20 5"

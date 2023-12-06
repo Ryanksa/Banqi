@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ChessPiece } from "../lib/piece";
+	import type { ChessPiece } from "../lib/chess";
 	import { getRandomInt } from "../lib/utils";
 
   let { piece, dropDown, floatUp } = $props<{

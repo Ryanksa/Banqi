@@ -3,45 +3,118 @@
 </svelte:head>
 
 <script lang="ts">
+	import { ChessPiece, ChessPieceColour, ChessPieceType, shuffleBoard, type Coord } from "$lib/chess";
+	import { swap } from "$lib/utils";
 	import Board from "../components/board.svelte";
-import Wheel from "../components/wheel.svelte";
+  import Wheel from "../components/wheel.svelte";
 
-  let isWheelActive = $state(false);
-  let isBlackActive = $state(false);
-  let isRedActive = $state(false);
+  // Board states
+  const board = $state(shuffleBoard([
+    new ChessPiece(ChessPieceType.GENERAL, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.GENERAL, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
+    new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
+    new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true)
+  ]));
+  let selected = $state<Coord | null>(null);
+	const turns = $state<(ChessPieceColour | null)[]>([null, null]);
   let wheelRotation = $state(0);
 
-  const activateWheel = (blackActive: boolean) => {
-    isWheelActive = true;
-    isBlackActive = blackActive;
-    isRedActive = !blackActive;
-    if (blackActive) wheelRotation = 0;
-    else wheelRotation = 180;
-  };
-
-  const turnWheel = (flip: boolean) => {
+  const onMove = (flip: boolean) => {
     if (flip) {
-      isBlackActive = !isBlackActive;
-      isRedActive = !isRedActive;
+      swap(turns);
       wheelRotation += 180;
     } else {
       wheelRotation += 360;
     }
   };
+
+  const setTurnColours = (movedColour: ChessPieceColour) => {
+    turns[0] = movedColour;
+    if (movedColour === ChessPieceColour.BLACK) {
+      turns[1] = ChessPieceColour.RED;
+      wheelRotation = 0;
+    } else {
+      turns[1] = ChessPieceColour.BLACK;
+      wheelRotation = 180;
+    }
+  };
+
+	const move = $derived((x: number, y: number) => {
+		const turnColour = turns[0];
+
+		// No chess piece has been selected yet
+		if (selected == null) {
+			const piece = board[x][y];
+      console.log(piece);
+			
+			// Case 1: selected nothing
+			if (!piece) {
+				return;
+			}
+			// Case 2: selected a hidden chess piece
+			if (piece.isHidden) {
+				board[x][y]!.isHidden = false;
+				if (!turnColour) {
+					setTurnColours(piece.colour);
+				}
+        onMove(true);
+				return;
+			}
+			// Case 3: selected a chess piece of the correct colour
+			if (piece.colour === turnColour) {
+				selected = { x, y };
+				return;
+			}
+			// Case 4: selected a chess piece of the wrong colour
+			if (piece.colour !== turnColour) {
+				return;
+			}
+		}
+		// A chess piece has been selected
+		else {}
+	});
 </script>
 
 <div class="container">
   <div class="header">
     <div>半</div>
     <Wheel
-      isActive={isWheelActive}
-      isBlackActive={isBlackActive}
-      isRedActive={isRedActive}
+      isActive={turns[0] != null}
+      isBlackActive={turns[0] === ChessPieceColour.BLACK}
+      isRedActive={turns[0] === ChessPieceColour.RED}
       rotation={wheelRotation}
     />
     <div>棋</div>
   </div>
-  <Board />
+  <Board board={board} move={move} />
 </div>
 
 <style>

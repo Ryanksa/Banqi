@@ -63,42 +63,9 @@ export enum ChessPieceColour {
 	RED = 'RED'
 }
 
-export const boardPieces = [
-	new ChessPiece(ChessPieceType.GENERAL, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.GENERAL, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
-	new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
-	new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true)
-];
+export type Coord = { x: number; y: number };
 
-export const shuffleBoard = (): (ChessPiece | null)[][] => {
+export const shuffleBoard = (boardPieces: (ChessPiece | null)[]): (ChessPiece | null)[][] => {
 	for (let i = boardPieces.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
 		const temp = boardPieces[i];

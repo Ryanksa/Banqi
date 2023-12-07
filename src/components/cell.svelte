@@ -1,24 +1,12 @@
 <script lang="ts">
-  let {
-    topLeftCorner,
-    topRightCorner,
-    bottomLeftCorner,
-    bottomRightCorner,
-    leftLineAcross,
-    rightLineAcross,
-    onClick,
-    highlighted,
-  } = $props<{
-    topLeftCorner?: boolean;
-    topRightCorner?: boolean;
-    bottomLeftCorner?: boolean;
-    bottomRightCorner?: boolean;
-    leftLineAcross?: boolean;
-    rightLineAcross?: boolean;
-    onClick?: () => void;
-    highlighted?: boolean;
-    children?: any; // stops TS from complaining
-  }>();
+  export let topLeftCorner: boolean = false;
+  export let topRightCorner: boolean = false;
+  export let bottomLeftCorner: boolean = false;
+  export let bottomRightCorner: boolean = false;
+  export let leftLineAcross: boolean = false;
+  export let rightLineAcross: boolean = false;
+  export let highlighted: boolean = false;
+  export let onClick: () => void = () => {};
 </script>
 
 <div class="cell" class:highlighted on:click={onClick}>

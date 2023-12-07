@@ -2,12 +2,10 @@
 	import type { ChessPiece } from "../lib/chess";
 	import { getRandomInt } from "../lib/utils";
 
-  let { piece, highlighted, dropDown, floatUp } = $props<{
-    piece: ChessPiece, 
-    highlighted?: boolean,
-    dropDown?: boolean,
-    floatUp?: boolean,
-  }>();
+  export let piece: ChessPiece;
+  export let highlighted: boolean = false;
+  export let dropDown: boolean = false;
+  export let floatUp: boolean = false;
 
   // Random rotation when dropping / floating
   const x = getRandomInt(0, 7);

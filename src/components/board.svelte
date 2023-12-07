@@ -3,12 +3,10 @@
 	import Cell from './cell.svelte';
 	import Piece from './piece.svelte';
 
-	const { board, move, selected, movable } = $props<{
-		board: (ChessPiece | null)[][],
-		move: (coord: Coord) => void,
-		selected: Coord | null,
-		movable: Coord[],
-	}>();
+	export let board: (ChessPiece | null)[][];
+	export let move: (coord: Coord) => void;
+	export let selected: Coord | null;
+	export let movable: Coord[];
 
 	const coords = [
 		{row: 0, col: 0},

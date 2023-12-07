@@ -1,10 +1,8 @@
 <script lang="ts">
-  let { isActive, isBlackActive, isRedActive, rotation } = $props<{
-    isActive: boolean, 
-    isBlackActive: boolean,
-    isRedActive: boolean,
-    rotation: number,
-  }>();
+  export let isActive: boolean;
+  export let isBlackActive: boolean;
+  export let isRedActive: boolean;
+  export let rotation: number;
 </script>
 
 <div class="container" style:opacity={isActive ? 1 : 0.5} style:rotate={`${rotation}deg`}>

@@ -12,72 +12,68 @@
 		canMoveRight,
 		coordsIn
 	} from '$lib/chess';
-	import { swap } from '$lib/utils';
 	import Board from '../components/board.svelte';
 	import Wheel from '../components/wheel.svelte';
 
-	// Board states
-	let board = $state(
-		shuffleBoard([
-			new ChessPiece(ChessPieceType.GENERAL, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.GENERAL, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
-			new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
-			new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true)
-		])
-	);
-  const turns = $state<(ChessPieceColour | null)[]>([null, null]);
-	let selected = $state<Coord | null>(null);
-  let movable = $state<Coord[]>([]);
-  let isConsecMove = $state(false);
-	let wheelRotation = $state(0);
+	let board = shuffleBoard([
+		new ChessPiece(ChessPieceType.GENERAL, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.GENERAL, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.ADVISOR, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.ELEPHANT, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.HORSE, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.CHARIOT, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.CANNON, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true),
+		new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.BLACK, true),
+		new ChessPiece(ChessPieceType.SOLDIER, ChessPieceColour.RED, true)
+	]);
+  let turns: (ChessPieceColour | null)[] = [null, null];
+	let selected: Coord | null = null;
+	let movable: Coord[] = [];
+	let isConsecMove = false;
+	let wheelRotation = 0;
 
-	const onMove = (flip: boolean) => {
-		if (flip) {
-      isConsecMove = false;
-			swap(turns);
-			wheelRotation += 180;
-		} else {
-      isConsecMove = true;
-			wheelRotation += 360;
-		}
-	};
-
-	const setTurnColours = (movedColour: ChessPieceColour) => {
-		turns[0] = movedColour;
-		if (movedColour === ChessPieceColour.BLACK) {
+	const onPickColour = (pickedColour: ChessPieceColour) => {
+		turns[0] = pickedColour;
+		if (pickedColour === ChessPieceColour.BLACK) {
 			turns[1] = ChessPieceColour.RED;
 			wheelRotation = 0;
 		} else {
 			turns[1] = ChessPieceColour.BLACK;
 			wheelRotation = 180;
+		}
+	};
+
+	const onMove = (switchTurns: boolean) => {
+		if (switchTurns) {
+      isConsecMove = false;
+			turns = [turns[1], turns[0]];
+			wheelRotation += 180;
+		} else {
+      isConsecMove = true;
+			wheelRotation += 360;
 		}
 	};
 
@@ -90,71 +86,70 @@
     }
     const { row, col } = coord;
     
-    const newMovable = [];
+		movable = [];
     if (canMoveUp(board, coord)) {
-      newMovable.push({row: row - 1, col});
+      movable.push({row: row - 1, col});
     }
     if (canMoveDown(board, coord)) {
-      newMovable.push({row: row + 1, col});
+      movable.push({row: row + 1, col});
     }
     if (canMoveLeft(board, coord)) {
-      newMovable.push({row, col: col - 1});
+      movable.push({row, col: col - 1});
     }
     if (canMoveRight(board, coord)) {
-      newMovable.push({row, col: col + 1});
+      movable.push({row, col: col + 1});
     }
-    movable = newMovable;
+    movable = movable;
   }
 
-	const move = (coord: Coord) => {
+	const move = (to: Coord) => {
 		const turnColour = turns[0];
 
 		// No chess piece has been selected yet
 		if (selected == null) {
-			const piece = board[coord.row][coord.col];
+			const targetPiece = board[to.row][to.col];
 
 			// Case 1: selected nothing
-			if (!piece) {
+			if (!targetPiece) {
 				return;
 			}
 			// Case 2: selected a hidden chess piece
-			if (piece.isHidden) {
-				board[coord.row][coord.col]!.isHidden = false;
+			if (targetPiece.isHidden) {
+				board[to.row][to.col]!.isHidden = false;
 				if (!turnColour) {
-					setTurnColours(piece.colour);
+					onPickColour(targetPiece.colour);
 				}
 				onMove(true);
 				return;
 			}
 			// Case 3: selected a chess piece of the correct colour
-			if (piece.colour === turnColour) {
-        onSelect(coord);
+			if (targetPiece.colour === turnColour) {
+        onSelect(to);
 				return;
 			}
 			// Case 4: selected a chess piece of the wrong colour
-			if (piece.colour !== turnColour) {
+			if (targetPiece.colour !== turnColour) {
 				return;
 			}
 		}
 		// A chess piece has been selected
 		else {
       // If clicked on the selected piece, deselect it
-      if (coordsEq(coord, selected)) {
+      if (coordsEq(to, selected)) {
         onSelect(null);
-        if (isConsecMove) {
-          onMove(true);
-        }
+        if (isConsecMove) onMove(true);
         return;
       }
 
-      if (coordsIn(movable, coord)) {
+			// If clicked on a movable square
+      if (coordsIn(movable, to)) {
         const selectedPiece = board[selected.row][selected.col]!;
-        const targetPiece = board[coord.row][coord.col];
+        const targetPiece = board[to.row][to.col];
 
-        // Case 1: move to an empty spot
+        // Case 1: move to an empty square
         if (targetPiece == null) {
           if (!isConsecMove) {
-            board[coord.row][coord.col] = selectedPiece;
+            board[to.row][to.col] = selectedPiece;
             board[selected.row][selected.col] = null;
             onMove(true);
             onSelect(null);
@@ -163,21 +158,21 @@
         }
         // Case 2: take a chess piece
         if (!targetPiece.isHidden) {
-          board[coord.row][coord.col] = selectedPiece;
+          board[to.row][to.col] = selectedPiece;
           board[selected.row][selected.col] = null;
           onMove(false);
-          onSelect(coord);
+          onSelect(to);
           return;
         }
         // Case 3: attempt to take a hidden chess piece
         if (targetPiece.isHidden) {
-          targetPiece.isHidden = false;
           if (selectedPiece.canTake(targetPiece)) {
-            board[coord.row][coord.col] = selectedPiece;
+            board[to.row][to.col] = selectedPiece;
             board[selected.row][selected.col] = null;
             onMove(false);
-            onSelect(coord);
+            onSelect(to);
           } else {
+						board[to.row][to.col]!.isHidden = false;
             onMove(true);
             onSelect(null);
           }

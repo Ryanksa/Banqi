@@ -44,10 +44,10 @@
   .container {
     position: relative;
     transform-style: preserve-3d;
+    transition: bottom 300ms, transform 300ms;
   }
   
   .container.highlighted {
-    transition: bottom 300ms, transform 300ms;
     bottom: 15px;
     transform: rotateX(12deg);
   }

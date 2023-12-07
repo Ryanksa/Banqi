@@ -13,6 +13,23 @@ import redChariot from '../assets/red-chariot.png';
 import redCannon from '../assets/red-cannon.png';
 import redSoldier from '../assets/red-soldier.png';
 
+export enum ChessPieceType {
+	GENERAL = 'GENERAL',
+	ADVISOR = 'ADVISOR',
+	ELEPHANT = 'ELEPHANT',
+	HORSE = 'HORSE',
+	CHARIOT = 'CHARIOT',
+	CANNON = 'CANNON',
+	SOLDIER = 'SOLDIER'
+}
+
+export enum ChessPieceColour {
+	BLACK = 'BLACK',
+	RED = 'RED'
+}
+
+export type Coord = { row: number; col: number };
+
 export class ChessPiece {
 	type: ChessPieceType;
 	colour: ChessPieceColour;
@@ -24,6 +41,10 @@ export class ChessPiece {
 		this.colour = colour;
 		this.image = ChessPiece.#getImage(type, colour);
 		this.isHidden = isHidden;
+	}
+
+	canTake(piece: ChessPiece): boolean {
+		return this.colour !== piece.colour && takeable[this.type].includes(piece.type);
 	}
 
 	static #getImage(type: ChessPieceType, colour: ChessPieceColour): string {
@@ -48,23 +69,6 @@ export class ChessPiece {
 	}
 }
 
-export enum ChessPieceType {
-	GENERAL = 'GENERAL',
-	ADVISOR = 'ADVISOR',
-	ELEPHANT = 'ELEPHANT',
-	HORSE = 'HORSE',
-	CHARIOT = 'CHARIOT',
-	CANNON = 'CANNON',
-	SOLDIER = 'SOLDIER'
-}
-
-export enum ChessPieceColour {
-	BLACK = 'BLACK',
-	RED = 'RED'
-}
-
-export type Coord = { row: number; col: number };
-
 export const shuffleBoard = (boardPieces: (ChessPiece | null)[]): (ChessPiece | null)[][] => {
 	for (let i = boardPieces.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
@@ -88,4 +92,87 @@ export const coordsEq = (coord1: Coord, coord2: Coord): boolean => {
 
 export const coordsIn = (coordsArr: Coord[], coord: Coord): boolean => {
 	return coordsArr.findIndex((c) => coordsEq(c, coord)) >= 0;
+};
+
+export const canMoveUp = (board: (ChessPiece | null)[][], selected: Coord): boolean => {
+	const { row, col } = selected;
+	return (
+		row > 0 &&
+		(board[row - 1][col] == null ||
+			board[row - 1][col]!.isHidden ||
+			board[row][col]!.canTake(board[row - 1][col]!))
+	);
+};
+
+export const canMoveDown = (board: (ChessPiece | null)[][], selected: Coord): boolean => {
+	const { row, col } = selected;
+	return (
+		row < 3 &&
+		(board[row + 1][col] == null ||
+			board[row + 1][col]!.isHidden ||
+			board[row][col]!.canTake(board[row + 1][col]!))
+	);
+};
+
+export const canMoveLeft = (board: (ChessPiece | null)[][], selected: Coord): boolean => {
+	const { row, col } = selected;
+	return (
+		col > 0 &&
+		(board[row][col - 1] == null ||
+			board[row][col - 1]!.isHidden ||
+			board[row][col]!.canTake(board[row][col - 1]!))
+	);
+};
+
+export const canMoveRight = (board: (ChessPiece | null)[][], selected: Coord): boolean => {
+	const { row, col } = selected;
+	return (
+		col < 7 &&
+		(board[row][col + 1] == null ||
+			board[row][col + 1]!.isHidden ||
+			board[row][col]!.canTake(board[row][col + 1]!))
+	);
+};
+
+export const takeable = {
+	[ChessPieceType.GENERAL]: [
+		ChessPieceType.GENERAL,
+		ChessPieceType.ADVISOR,
+		ChessPieceType.ELEPHANT,
+		ChessPieceType.HORSE,
+		ChessPieceType.CHARIOT,
+		ChessPieceType.CANNON
+	],
+	[ChessPieceType.ADVISOR]: [
+		ChessPieceType.ADVISOR,
+		ChessPieceType.ELEPHANT,
+		ChessPieceType.HORSE,
+		ChessPieceType.CHARIOT,
+		ChessPieceType.CANNON,
+		ChessPieceType.SOLDIER
+	],
+	[ChessPieceType.ELEPHANT]: [
+		ChessPieceType.ELEPHANT,
+		ChessPieceType.HORSE,
+		ChessPieceType.CHARIOT,
+		ChessPieceType.CANNON,
+		ChessPieceType.SOLDIER
+	],
+	[ChessPieceType.CHARIOT]: [
+		ChessPieceType.CHARIOT,
+		ChessPieceType.HORSE,
+		ChessPieceType.CANNON,
+		ChessPieceType.SOLDIER
+	],
+	[ChessPieceType.HORSE]: [ChessPieceType.HORSE, ChessPieceType.CANNON, ChessPieceType.SOLDIER],
+	[ChessPieceType.SOLDIER]: [ChessPieceType.GENERAL, ChessPieceType.CANNON, ChessPieceType.SOLDIER],
+	[ChessPieceType.CANNON]: [
+		ChessPieceType.GENERAL,
+		ChessPieceType.ADVISOR,
+		ChessPieceType.ELEPHANT,
+		ChessPieceType.HORSE,
+		ChessPieceType.CHARIOT,
+		ChessPieceType.CANNON,
+		ChessPieceType.SOLDIER
+	]
 };

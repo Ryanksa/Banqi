@@ -1,151 +1,150 @@
 <script lang="ts">
-	import type { ChessPiece } from "../lib/chess";
-	import { getRandomInt } from "../lib/utils";
+	import type { ChessPiece } from '../lib/chess';
+	import { getRandomInt } from '../lib/utils';
 
-  export let piece: ChessPiece;
-  export let selected: boolean = false;
-  export let dropDown: boolean = false;
-  export let floatUp: boolean = false;
+	export let piece: ChessPiece;
+	export let selected: boolean = false;
+	export let dropDown: boolean = false;
+	export let floatUp: boolean = false;
 
-  // Random rotation when dropping / floating
-  const x = getRandomInt(0, 7);
-  const y = getRandomInt(0, 7);
-  const z = getRandomInt(0, 7);
-  const a = getRandomInt(0, 361);
+	// Random rotation when dropping / floating
+	const x = getRandomInt(0, 7);
+	const y = getRandomInt(0, 7);
+	const z = getRandomInt(0, 7);
+	const a = getRandomInt(0, 361);
 </script>
 
-<div 
-  class="container"
-  class:selected
-  class:drop-down={dropDown}
-  class:float-up={floatUp}
-  style:--x={x}
-  style:--y={y}
-  style:--z={z}
-  style:--a={`${a}deg`}
+<div
+	class="container"
+	class:selected
+	class:drop-down={dropDown}
+	class:float-up={floatUp}
+	style:--x={x}
+	style:--y={y}
+	style:--z={z}
+	style:--a={`${a}deg`}
 >
-  <div
-    class="piece"
-    style:transform={piece.isHidden ? "rotateX(-165deg)" : "rotateX(15deg)"}
-  >
-    <div class="bottom" />
-    {#each {length: 36} as _}
-      <div class="side" />
-    {/each}
-    <div class="top">
-      <img src={piece.image} alt="" width="60px" height="60px" />
-    </div>
-  </div>
+	<div class="piece" style:transform={piece.isHidden ? 'rotateX(-165deg)' : 'rotateX(15deg)'}>
+		<div class="bottom" />
+		{#each { length: 36 } as _}
+			<div class="side" />
+		{/each}
+		<div class="top">
+			<img src={piece.image} alt="" width="60px" height="60px" />
+		</div>
+	</div>
 </div>
 
 <style lang="scss">
-  .container {
-    position: relative;
-    transform-style: preserve-3d;
-    transition: bottom 300ms, transform 300ms;
-  }
-  
-  .container.selected {
-    bottom: 30px;
-    transform: rotateX(12deg);
-  }
+	.container {
+		position: relative;
+		transform-style: preserve-3d;
+		transition:
+			bottom 300ms,
+			transform 300ms;
+	}
 
-  .container.drop-down {
-    animation: drop-down 600ms ease-out;
-  }
+	.container.selected {
+		bottom: 30px;
+		transform: rotateX(12deg);
+	}
 
-  .container.float-up {
-    animation: float-up 1200ms ease-in forwards;
-  }
+	.container.drop-down {
+		animation: drop-down 600ms ease-out;
+	}
 
-  .piece {
-    position: relative;
-    transform-style: preserve-3d;
-    width: 60px;
-    height: 60px;
-    transition: transform 750ms;
-  }
+	.container.float-up {
+		animation: float-up 1200ms ease-in forwards;
+	}
 
-  .top {
-    position: absolute;
-    left: calc(50% - 30px);
-    top: calc(50% - 30px);
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    box-sizing: border-box;
-    border: 1px solid var(--chesspiece-side);
-    translate: 0 0 12px;
-  }
+	.piece {
+		position: relative;
+		transform-style: preserve-3d;
+		width: 60px;
+		height: 60px;
+		transition: transform 750ms;
+	}
 
-  .bottom {
-    position: absolute;
-    left: calc(50% - 30px);
-    top: calc(50% - 30px);
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background-color: var(--chesspiece-back);
-    box-sizing: border-box;
-    border: 1px solid var(--chesspiece-side);
-  }
+	.top {
+		position: absolute;
+		left: calc(50% - 30px);
+		top: calc(50% - 30px);
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+		box-sizing: border-box;
+		border: 1px solid var(--chesspiece-side);
+		translate: 0 0 12px;
+	}
 
-  .side {
-    position: absolute;
-    bottom: 50%;
-    left: calc(50% - 3px);
-    width: 6px;
-    height: 12px;
-    background-color: var(--chesspiece-side);
-    transform-origin: bottom;
-    transform: rotateX(-90deg) rotateY(var(--ry)) translateZ(30px);
-  }
+	.bottom {
+		position: absolute;
+		left: calc(50% - 30px);
+		top: calc(50% - 30px);
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+		background-color: var(--chesspiece-back);
+		box-sizing: border-box;
+		border: 1px solid var(--chesspiece-side);
+	}
 
-  @for $i from 1 through 37 {
-    .side:nth-child(#{$i}) {
-      --ry: #{($i - 1) * 10}deg;
-    }
-  }
+	.side {
+		position: absolute;
+		bottom: 50%;
+		left: calc(50% - 3px);
+		width: 6px;
+		height: 12px;
+		background-color: var(--chesspiece-side);
+		transform-origin: bottom;
+		transform: rotateX(-90deg) rotateY(var(--ry)) translateZ(30px);
+	}
 
-  @keyframes drop-down {
-    0% {
-      bottom: 60px;
-      transform: rotate3d(var(--x), var(--y), var(--z), var(--a));
-    }
-    50% {
-      bottom: 6px;
-      transform: rotate3d(2, 3, 1, -30deg);
-    }
-    60% {
-      bottom: 4.5px;
-      transform: rotate3d(2, -1, 0, 24deg);
-    }
-    75% {
-      bottom: 3px;
-      transform: rotate3d(3, 1, 0, 24deg);
-    }
-    90% {
-      bottom: 1.5px;
-      transform: rotate3d(3, 1, 0, 6deg);
-    }
-    100% {
-      bottom: 0;
-      transform: rotate3d(0, 0, 0, 0deg);
-    }
-  }
+	@for $i from 1 through 37 {
+		.side:nth-child(#{$i}) {
+			--ry: #{($i - 1) * 10}deg;
+		}
+	}
 
-  @keyframes float-up {
-    0% {
-      bottom: 0px;
-      transform: rotate3d(0, 0, 0, 0deg);
-    }
-    99% {
-      bottom: 180px;
-      transform: rotate3d(var(--x), var(--y), var(--z), var(--a));
-    }
-    100% {
-      bottom: 100vh;
-      transform: none;
-    }
-  }
+	@keyframes drop-down {
+		0% {
+			bottom: 90px;
+			transform: rotate3d(var(--x), var(--y), var(--z), var(--a));
+		}
+		50% {
+			bottom: 6px;
+			transform: rotate3d(2, 3, 1, -30deg);
+		}
+		60% {
+			bottom: 4.5px;
+			transform: rotate3d(2, -1, 0, 24deg);
+		}
+		75% {
+			bottom: 3px;
+			transform: rotate3d(3, 1, 0, 24deg);
+		}
+		90% {
+			bottom: 1.5px;
+			transform: rotate3d(3, 1, 0, 6deg);
+		}
+		100% {
+			bottom: 0;
+			transform: rotate3d(0, 0, 0, 0deg);
+		}
+	}
+
+	@keyframes float-up {
+		0% {
+			bottom: 0px;
+			transform: rotate3d(0, 0, 0, 0deg);
+		}
+		99% {
+			bottom: 180px;
+			transform: rotate3d(var(--x), var(--y), var(--z), var(--a));
+		}
+		100% {
+			bottom: 100vh;
+			transform: none;
+		}
+	}
 </style>

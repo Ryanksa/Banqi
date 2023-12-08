@@ -1,8 +1,10 @@
 <script lang="ts">
 	import {
+		ChessPiece,
 		ChessPieceColour,
 	} from '$lib/chess';
 	import Board from '../components/board.svelte';
+	import Piece from '../components/piece.svelte';
 	import Wheel from '../components/wheel.svelte';
 	import { game } from '../stores/chess';
 
@@ -53,7 +55,19 @@
 		/>
 		<div>棋</div>
 	</div>
-	<Board />
+	<div class="game-container">
+		<div class="taken-red">
+			{#each $game.takenRed as piece (piece.id)}
+				<Piece piece={piece} dropDown />
+			{/each}
+		</div>
+		<Board />
+		<div class="taken-black">
+			{#each $game.takenBlack as piece (piece.id)}
+				<Piece piece={piece} dropDown />
+			{/each}
+		</div>
+	</div>
 </div>
 
 <style>
@@ -70,5 +84,31 @@
 		justify-content: space-evenly;
 		align-items: center;
 		font-size: 3rem;
+	}
+
+	.game-container {
+		position: relative;
+		height: 480px;
+		margin: auto;
+	}
+
+	.taken-red {
+		position: absolute;
+		top: 0;
+		right: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap-reverse;
+	}
+
+	.taken-black {
+		position: absolute;
+		top: 0;
+		left: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
 	}
 </style>

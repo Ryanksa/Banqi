@@ -125,6 +125,8 @@ export class Game {
 	isConsecMove: boolean;
 	selected: Coord | null;
 	movable: Coord[];
+	takenBlack: ChessPiece[];
+	takenRed: ChessPiece[];
 
 	constructor() {
 		this.board = Game.#shuffleBoard([
@@ -165,6 +167,8 @@ export class Game {
 		this.isConsecMove = false;
 		this.selected = null;
 		this.movable = [];
+		this.takenBlack = [];
+		this.takenRed = [];
 	}
 
 	move = (to: Coord) => {
@@ -213,16 +217,14 @@ export class Game {
 
 				// Case 1: move to an empty square
 				if (targetPiece == null) {
-					this.board[to.row][to.col] = selectedPiece;
-					this.board[this.selected.row][this.selected.col] = null;
+					this.#movePiece(to);
 					this.#finishMove(true);
 					this.#selectCoord(null);
 					return;
 				}
 				// Case 2: take a chess piece
 				if (!targetPiece.isHidden) {
-					this.board[to.row][to.col] = selectedPiece;
-					this.board[this.selected.row][this.selected.col] = null;
+					this.#movePiece(to);
 					this.#finishMove(false);
 					this.#selectCoord(to);
 					return;
@@ -230,8 +232,7 @@ export class Game {
 				// Case 3: attempt to take a hidden chess piece
 				if (targetPiece.isHidden) {
 					if (selectedPiece.canTake(targetPiece)) {
-						this.board[to.row][to.col] = selectedPiece;
-						this.board[this.selected.row][this.selected.col] = null;
+						this.#movePiece(to);
 						this.#finishMove(false);
 						this.#selectCoord(to);
 					} else {
@@ -252,6 +253,25 @@ export class Game {
 		} else {
 			this.turns[1] = ChessPieceColour.BLACK;
 		}
+	};
+
+	#movePiece = (to: Coord) => {
+		if (this.selected == null) return;
+
+		const selectedPiece = this.board[this.selected.row][this.selected.col];
+		const targetPiece = this.board[to.row][to.col];
+
+		if (targetPiece != null) {
+			targetPiece.isHidden = false;
+			if (targetPiece.colour === ChessPieceColour.BLACK) {
+				this.takenBlack.push(targetPiece);
+			} else {
+				this.takenRed.push(targetPiece);
+			}
+		}
+
+		this.board[to.row][to.col] = selectedPiece;
+		this.board[this.selected.row][this.selected.col] = null;
 	};
 
 	#finishMove = (switchTurns: boolean) => {

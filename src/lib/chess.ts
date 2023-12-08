@@ -12,6 +12,7 @@ import redHorse from '../assets/red-horse.png';
 import redChariot from '../assets/red-chariot.png';
 import redCannon from '../assets/red-cannon.png';
 import redSoldier from '../assets/red-soldier.png';
+import { autoIncrementID } from './utils';
 
 export type Coord = { row: number; col: number };
 
@@ -31,12 +32,14 @@ export enum ChessPieceColour {
 }
 
 export class ChessPiece {
+	id: number;
 	type: ChessPieceType;
 	colour: ChessPieceColour;
 	image: string;
 	isHidden: boolean;
 
 	constructor(type: ChessPieceType, colour: ChessPieceColour, isHidden: boolean) {
+		this.id = autoIncrementID();
 		this.type = type;
 		this.colour = colour;
 		this.image = ChessPiece.#getImage(type, colour);
@@ -284,6 +287,17 @@ export class Game {
 		if (this.#canMoveRight()) {
 			this.movable.push({ row, col: col + 1 });
 		}
+
+		const jumpCoords = [];
+		jumpCoords.push(this.#canJumpUp());
+		jumpCoords.push(this.#canJumpDown());
+		jumpCoords.push(this.#canJumpLeft());
+		jumpCoords.push(this.#canJumpRight());
+		for (const coord of jumpCoords) {
+			if (coord != null) {
+				this.movable.push(coord);
+			}
+		}
 	};
 
 	#canMoveUp = (): boolean => {
@@ -292,11 +306,12 @@ export class Game {
 		const { row, col } = this.selected;
 		if (row <= 0) return false;
 
+		const isCannon = this.board[row][col]!.type === ChessPieceType.CANNON;
 		const upPiece = this.board[row - 1][col];
 		return (
 			(upPiece == null && !this.isConsecMove) ||
-			(upPiece != null && upPiece.isHidden) ||
-			(upPiece != null && this.board[row][col]!.canTake(upPiece))
+			(upPiece != null && !isCannon && upPiece.isHidden) ||
+			(upPiece != null && !isCannon && this.board[row][col]!.canTake(upPiece))
 		);
 	};
 
@@ -306,11 +321,12 @@ export class Game {
 		const { row, col } = this.selected;
 		if (row >= 3) return false;
 
+		const isCannon = this.board[row][col]!.type === ChessPieceType.CANNON;
 		const downPiece = this.board[row + 1][col];
 		return (
 			(downPiece == null && !this.isConsecMove) ||
-			(downPiece != null && downPiece.isHidden) ||
-			(downPiece != null && this.board[row][col]!.canTake(downPiece))
+			(downPiece != null && !isCannon && downPiece.isHidden) ||
+			(downPiece != null && !isCannon && this.board[row][col]!.canTake(downPiece))
 		);
 	};
 
@@ -320,11 +336,12 @@ export class Game {
 		const { row, col } = this.selected;
 		if (col <= 0) return false;
 
+		const isCannon = this.board[row][col]!.type === ChessPieceType.CANNON;
 		const leftPiece = this.board[row][col - 1];
 		return (
 			(leftPiece == null && !this.isConsecMove) ||
-			(leftPiece != null && leftPiece.isHidden) ||
-			(leftPiece != null && this.board[row][col]!.canTake(leftPiece))
+			(leftPiece != null && !isCannon && leftPiece.isHidden) ||
+			(leftPiece != null && !isCannon && this.board[row][col]!.canTake(leftPiece))
 		);
 	};
 
@@ -334,12 +351,125 @@ export class Game {
 		const { row, col } = this.selected;
 		if (col >= 7) return false;
 
+		const isCannon = this.board[row][col]!.type === ChessPieceType.CANNON;
 		const rightPiece = this.board[row][col + 1];
 		return (
 			(rightPiece == null && !this.isConsecMove) ||
-			(rightPiece != null && rightPiece.isHidden) ||
-			(rightPiece != null && this.board[row][col]!.canTake(rightPiece))
+			(rightPiece != null && !isCannon && rightPiece.isHidden) ||
+			(rightPiece != null && !isCannon && this.board[row][col]!.canTake(rightPiece))
 		);
+	};
+
+	#canJumpUp = (): Coord | null => {
+		if (this.selected == null) return null;
+
+		const { row, col } = this.selected;
+		const selectedPiece = this.board[row][col]!;
+		if (selectedPiece.type !== ChessPieceType.CANNON) return null;
+
+		let piecesSeen = 0;
+		for (let r = row - 1; r > -1; r--) {
+			const nextPiece = this.board[r][col];
+			if (nextPiece != null) {
+				piecesSeen++;
+			}
+
+			if (
+				piecesSeen === 2 &&
+				nextPiece != null &&
+				(nextPiece.isHidden || (!nextPiece.isHidden && selectedPiece.colour !== nextPiece.colour))
+			) {
+				return { row: r, col: col };
+			}
+
+			if (piecesSeen >= 2) break;
+		}
+
+		return null;
+	};
+
+	#canJumpDown = (): Coord | null => {
+		if (this.selected == null) return null;
+
+		const { row, col } = this.selected;
+		const selectedPiece = this.board[row][col]!;
+		if (selectedPiece.type !== ChessPieceType.CANNON) return null;
+
+		let piecesSeen = 0;
+		for (let r = row + 1; r < 4; r++) {
+			const nextPiece = this.board[r][col];
+			if (nextPiece != null) {
+				piecesSeen++;
+			}
+
+			if (
+				piecesSeen === 2 &&
+				nextPiece != null &&
+				(nextPiece.isHidden || (!nextPiece.isHidden && selectedPiece.colour !== nextPiece.colour))
+			) {
+				return { row: r, col: col };
+			}
+
+			if (piecesSeen >= 2) break;
+		}
+
+		return null;
+	};
+
+	#canJumpLeft = (): Coord | null => {
+		if (this.selected == null) return null;
+
+		const { row, col } = this.selected;
+		const selectedPiece = this.board[row][col]!;
+		if (selectedPiece.type !== ChessPieceType.CANNON) return null;
+
+		let piecesSeen = 0;
+		for (let c = col - 1; c > -1; c--) {
+			const nextPiece = this.board[row][c];
+			if (nextPiece != null) {
+				piecesSeen++;
+			}
+
+			if (
+				piecesSeen === 2 &&
+				nextPiece != null &&
+				(nextPiece.isHidden || (!nextPiece.isHidden && selectedPiece.colour !== nextPiece.colour))
+			) {
+				return { row: row, col: c };
+			}
+
+			if (piecesSeen >= 2) break;
+		}
+
+		return null;
+	};
+
+	#canJumpRight = (): Coord | null => {
+		if (this.selected == null) return null;
+
+		const { row, col } = this.selected;
+		const selectedPiece = this.board[row][col]!;
+		if (selectedPiece.type !== ChessPieceType.CANNON) return null;
+
+		let piecesSeen = 0;
+		for (let c = col + 1; c < 8; c++) {
+			const nextPiece = this.board[row][c];
+			if (nextPiece != null) {
+				piecesSeen++;
+			}
+
+			if (
+				piecesSeen === 2 &&
+				nextPiece != null &&
+				(nextPiece.isHidden || (!nextPiece.isHidden && selectedPiece.colour !== nextPiece.colour))
+			) {
+				return { row: row, col: c };
+			}
+
+			if (piecesSeen >= 2) break;
+		}
+
+		return null;
 	};
 
 	static #shuffleBoard = (boardPieces: (ChessPiece | null)[]): (ChessPiece | null)[][] => {

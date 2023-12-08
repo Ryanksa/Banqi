@@ -38,7 +38,6 @@
 		{row: 3, col: 6},
 		{row: 3, col: 7},
 	];
-
 	const topLeftCornerIndices = [8, 10, 12, 14, 17, 23];
 	const topRightCornerIndices = [9, 11, 13, 15, 16, 22];
 	const bottomLeftCornerIndices = [0, 2, 4, 6, 9, 15];
@@ -48,31 +47,28 @@
 </script>
 
 <div class="container">
-	{#each $game.board as rowPieces, row}
-		{#each rowPieces as piece, col}
-			{@const i = row * 8 + col}
-			<Cell
-				topLeftCorner={topLeftCornerIndices.includes(i)}
-				topRightCorner={topRightCornerIndices.includes(i)}
-				bottomLeftCorner={bottomLeftCornerIndices.includes(i)}
-				bottomRightCorner={bottomRightCornerIndices.includes(i)}
-				leftLineAcross={leftLineAcrossIndices.includes(i)}
-				rightLineAcross={rightLineAcrossIndices.includes(i)}
-				onClick={() => {
-					$game.move(coords[i]);
-					game.set($game);
-				}}
-				highlighted={coordsIn($game.movable, coords[i])}
-			>
-				{#if piece != null}
-					<Piece
-						dropDown 
-						piece={piece}
-						highlighted={$game.selected != null && coordsEq($game.selected, coords[i])}	
-					/>
-				{/if}
-			</Cell>
-		{/each}
+	{#each $game.board.flat() as piece, i (piece ? `p${piece.id}` : `e${i}`)}
+		<Cell
+			topLeftCorner={topLeftCornerIndices.includes(i)}
+			topRightCorner={topRightCornerIndices.includes(i)}
+			bottomLeftCorner={bottomLeftCornerIndices.includes(i)}
+			bottomRightCorner={bottomRightCornerIndices.includes(i)}
+			leftLineAcross={leftLineAcrossIndices.includes(i)}
+			rightLineAcross={rightLineAcrossIndices.includes(i)}
+			onClick={() => {
+				$game.move(coords[i]);
+				game.set($game);
+			}}
+			highlighted={coordsIn($game.movable, coords[i])}
+		>
+			{#if piece != null}
+				<Piece
+					dropDown 
+					piece={piece}
+					highlighted={$game.selected != null && coordsEq($game.selected, coords[i])}	
+				/>
+			{/if}
+		</Cell>
 	{/each}
 </div>
 

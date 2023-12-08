@@ -23,7 +23,7 @@
 				coloursPicked = true;
 			}
 		} else {
-			if ((isBlackActive && game.turns[0] === ChessPieceColour.BLACK) || (isRedActive && game.turns[0] === ChessPieceColour.RED)) {
+			if (game.isConsecMove) {
 				wheelRotation += 360;
 			} else if (isRedActive && game.turns[0] === ChessPieceColour.BLACK) {
 				isBlackActive = true;

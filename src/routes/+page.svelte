@@ -12,23 +12,29 @@
 	let isRedActive = false;
 
 	game.subscribe((game) => {
-		if (coloursPicked) {
+		if (!coloursPicked) {
 			if (game.turns[0] === ChessPieceColour.BLACK) {
 				isBlackActive = true;
-				isRedActive = false;
-			} else if (game.turns[0] === ChessPieceColour.RED) {
-				isBlackActive = false;
-				isRedActive = true;
-			}
-		} else {
-			if (game.turns[0] === ChessPieceColour.BLACK) {
 				wheelRotation = 0;
 				coloursPicked = true;
 			} else if (game.turns[0] === ChessPieceColour.RED) {
+				isRedActive = true;
 				wheelRotation = 180;
 				coloursPicked = true;
 			}
-		}	
+		} else {
+			if ((isBlackActive && game.turns[0] === ChessPieceColour.BLACK) || (isRedActive && game.turns[0] === ChessPieceColour.RED)) {
+				wheelRotation += 360;
+			} else if (isRedActive && game.turns[0] === ChessPieceColour.BLACK) {
+				isBlackActive = true;
+				isRedActive = false;
+				wheelRotation += 180;
+			} else if (isBlackActive && game.turns[0] === ChessPieceColour.RED) {
+				isBlackActive = false;
+				isRedActive = true;
+				wheelRotation += 180;
+			}
+		}
 	});
 </script>
 

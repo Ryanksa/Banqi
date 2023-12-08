@@ -212,16 +212,16 @@ export class Game {
 				if (targetPiece == null) {
 					this.board[to.row][to.col] = selectedPiece;
 					this.board[this.selected.row][this.selected.col] = null;
-					this.#selectCoord(null);
 					this.#finishMove(true);
+					this.#selectCoord(null);
 					return;
 				}
 				// Case 2: take a chess piece
 				if (!targetPiece.isHidden) {
 					this.board[to.row][to.col] = selectedPiece;
 					this.board[this.selected.row][this.selected.col] = null;
-					this.#selectCoord(to);
 					this.#finishMove(false);
+					this.#selectCoord(to);
 					return;
 				}
 				// Case 3: attempt to take a hidden chess piece
@@ -229,12 +229,12 @@ export class Game {
 					if (selectedPiece.canTake(targetPiece)) {
 						this.board[to.row][to.col] = selectedPiece;
 						this.board[this.selected.row][this.selected.col] = null;
-						this.#selectCoord(to);
 						this.#finishMove(false);
+						this.#selectCoord(to);
 					} else {
 						targetPiece.isHidden = false;
-						this.#selectCoord(null);
 						this.#finishMove(true);
+						this.#selectCoord(null);
 					}
 					return;
 				}

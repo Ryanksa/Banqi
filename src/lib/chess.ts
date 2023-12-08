@@ -127,6 +127,7 @@ export class Game {
 	movable: Coord[];
 	takenBlack: ChessPiece[];
 	takenRed: ChessPiece[];
+	ended: boolean;
 
 	constructor() {
 		this.board = Game.#shuffleBoard([
@@ -169,81 +170,85 @@ export class Game {
 		this.movable = [];
 		this.takenBlack = [];
 		this.takenRed = [];
+		this.ended = false;
 	}
 
 	move = (to: Coord) => {
-		const turnColour = this.turns[0];
+		move: {
+			const turnColour = this.turns[0];
 
-		// No chess piece has been selected yet
-		if (this.selected == null) {
-			const targetPiece = this.board[to.row][to.col];
-
-			// Case 1: selected nothing
-			if (!targetPiece) {
-				return;
-			}
-			// Case 2: selected a hidden chess piece
-			if (targetPiece.isHidden) {
-				targetPiece.isHidden = false;
-				if (!turnColour) {
-					this.#pickColour(targetPiece.colour);
-				}
-				this.#finishMove(true);
-				return;
-			}
-			// Case 3: selected a chess piece of the correct colour
-			if (targetPiece.colour === turnColour) {
-				this.#selectCoord(to);
-				return;
-			}
-			// Case 4: selected a chess piece of the wrong colour
-			if (targetPiece.colour !== turnColour) {
-				return;
-			}
-		}
-		// A chess piece has been selected
-		else {
-			// If clicked on the selected piece, deselect it
-			if (coordsEq(to, this.selected)) {
-				this.#selectCoord(null);
-				if (this.isConsecMove) this.#finishMove(true);
-				return;
-			}
-
-			// If clicked on a movable square
-			if (coordsIn(this.movable, to)) {
-				const selectedPiece = this.board[this.selected.row][this.selected.col]!;
+			// No chess piece has been selected yet
+			if (this.selected == null) {
 				const targetPiece = this.board[to.row][to.col];
 
-				// Case 1: move to an empty square
-				if (targetPiece == null) {
-					this.#movePiece(to);
-					this.#finishMove(true);
-					this.#selectCoord(null);
-					return;
+				// Case 1: selected nothing
+				if (!targetPiece) {
+					break move;
 				}
-				// Case 2: take a chess piece
-				if (!targetPiece.isHidden) {
-					this.#movePiece(to);
-					this.#finishMove(false);
-					this.#selectCoord(to);
-					return;
-				}
-				// Case 3: attempt to take a hidden chess piece
+				// Case 2: selected a hidden chess piece
 				if (targetPiece.isHidden) {
-					if (selectedPiece.canTake(targetPiece)) {
+					targetPiece.isHidden = false;
+					if (!turnColour) {
+						this.#pickColour(targetPiece.colour);
+					}
+					this.#finishMove(true);
+					break move;
+				}
+				// Case 3: selected a chess piece of the correct colour
+				if (targetPiece.colour === turnColour) {
+					this.#selectCoord(to);
+					break move;
+				}
+				// Case 4: selected a chess piece of the wrong colour
+				if (targetPiece.colour !== turnColour) {
+					break move;
+				}
+			}
+			// A chess piece has been selected
+			else {
+				// If clicked on the selected piece, deselect it
+				if (coordsEq(to, this.selected)) {
+					this.#selectCoord(null);
+					if (this.isConsecMove) this.#finishMove(true);
+					break move;
+				}
+
+				// If clicked on a movable square
+				if (coordsIn(this.movable, to)) {
+					const selectedPiece = this.board[this.selected.row][this.selected.col]!;
+					const targetPiece = this.board[to.row][to.col];
+
+					// Case 1: move to an empty square
+					if (targetPiece == null) {
+						this.#movePiece(to);
+						this.#finishMove(true);
+						this.#selectCoord(null);
+						break move;
+					}
+					// Case 2: take a chess piece
+					if (!targetPiece.isHidden) {
 						this.#movePiece(to);
 						this.#finishMove(false);
 						this.#selectCoord(to);
-					} else {
-						targetPiece.isHidden = false;
-						this.#finishMove(true);
-						this.#selectCoord(null);
+						break move;
 					}
-					return;
+					// Case 3: attempt to take a hidden chess piece
+					if (targetPiece.isHidden) {
+						if (selectedPiece.canTake(targetPiece)) {
+							this.#movePiece(to);
+							this.#finishMove(false);
+							this.#selectCoord(to);
+						} else {
+							targetPiece.isHidden = false;
+							this.#finishMove(true);
+							this.#selectCoord(null);
+						}
+						break move;
+					}
 				}
 			}
 		}
+		this.#checkIfEnded();
 	};
 
 	#pickColour = (colour: ChessPieceColour) => {
@@ -491,6 +496,14 @@ export class Game {
 
 		return null;
 	};
+
+	#checkIfEnded() {
+		if (this.takenBlack.length >= 16 || this.takenRed.length >= 16) {
+			this.selected = null;
+			this.movable = [];
+			this.ended = true;
+		}
+	}
 
 	static #shuffleBoard = (boardPieces: (ChessPiece | null)[]): (ChessPiece | null)[][] => {
 		for (let i = boardPieces.length - 1; i > 0; i--) {

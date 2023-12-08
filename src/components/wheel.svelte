@@ -7,20 +7,16 @@
 
 <div class="container" style:opacity={isActive ? 1 : 0.5} style:rotate={`${rotation}deg`}>
   <div 
-    class="black-half" 
-    style:--blur={isBlackActive ? "0px" : "1.5px"}
+    class="black-half"
   />
   <div 
-    class="red-half" 
-    style:--blur={isRedActive ? "0px" : "1.5px"}
+    class="red-half"
   />
   <div 
-    class="black-circle" 
-    style:--blur={isBlackActive ? "0px" : "1.5px"}
+    class="black-circle"
   />
   <div 
-    class="red-circle" 
-    style:--blur={isRedActive ? "0px" : "1.5px"}
+    class="red-circle"
   />
   <div 
     class="black-eye"
@@ -49,8 +45,6 @@
     height: 6rem;
     border-radius: 3rem 0 0 3rem;
     background-color: var(--black);
-    filter: blur(var(--blur));
-    transition: filter 300ms;
   }
 
   .red-half {
@@ -61,8 +55,6 @@
     height: 6rem;
     border-radius: 0 3rem 3rem 0;
     background-color: var(--red);
-    filter: blur(var(--blur));
-    transition: filter 300ms;
   }
 
   .black-circle {
@@ -73,8 +65,6 @@
     height: 3rem;
     border-radius: 50%;
     background-color: var(--black);
-    filter: blur(var(--blur));
-    transition: filter 300ms;
   }
 
   .red-circle {
@@ -85,8 +75,6 @@
     height: 3rem;
     border-radius: 50%;
     background-color: var(--red);
-    filter: blur(var(--blur));
-    transition: filter 300ms;
   }
 
   .black-eye {

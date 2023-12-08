@@ -54,52 +54,91 @@
 </script>
 
 <div class="container">
-	<div class="board">
-		{#each $game.board as rowPieces, row}
-			{#each rowPieces as piece, col}
-				{@const i = row * 8 + col}
-				<Cell
-					topLeftCorner={topLeftCornerIndices.includes(i)}
-					topRightCorner={topRightCornerIndices.includes(i)}
-					bottomLeftCorner={bottomLeftCornerIndices.includes(i)}
-					bottomRightCorner={bottomRightCornerIndices.includes(i)}
-					leftLineAcross={leftLineAcrossIndices.includes(i)}
-					rightLineAcross={rightLineAcrossIndices.includes(i)}
-					onClick={() => handleClick(coords[i])}
-					highlighted={coordsIn($game.movable, coords[i])}
-				/>
-			{/each}
+	<div class="taken-red">
+		{#each $game.takenRed as piece (piece.id)}
+			<Piece piece={piece} dropDown floatUp={$game.ended} />
 		{/each}
 	</div>
-	<div class="board pieces">
-		{#each $game.board as rowPieces, row}
-			{#each rowPieces as piece, col (piece ? `p${piece.id}` : `e${row * 8 + col}`)}
-				{@const i = row * 8 + col}
-				<div
-					class="piece"
-					on:click={(event) => {
-						event.stopPropagation();
-						handleClick(coords[i]);
-					}}
-					in:receive={{ key: piece?.id }}
-					out:send={{ key: piece?.id }}
-					animate:flip={{ duration: 300 }}
-				>
-					{#if piece != null}
-						<Piece
-							dropDown
-							piece={piece}
-							selected={$game.selected != null && coordsEq($game.selected, coords[i])}	
-						/>
-					{/if}
-				</div>
+	<div class="board-container">
+		<div class="board">
+			{#each $game.board as rowPieces, row}
+				{#each rowPieces as _piece, col}
+					{@const i = row * 8 + col}
+					<Cell
+						topLeftCorner={topLeftCornerIndices.includes(i)}
+						topRightCorner={topRightCornerIndices.includes(i)}
+						bottomLeftCorner={bottomLeftCornerIndices.includes(i)}
+						bottomRightCorner={bottomRightCornerIndices.includes(i)}
+						leftLineAcross={leftLineAcrossIndices.includes(i)}
+						rightLineAcross={rightLineAcrossIndices.includes(i)}
+						onClick={() => handleClick(coords[i])}
+						highlighted={coordsIn($game.movable, coords[i])}
+					/>
+				{/each}
 			{/each}
+		</div>
+		<div class="board pieces">
+			{#each $game.board as rowPieces, row}
+				{#each rowPieces as piece, col (piece ? `p${piece.id}` : `e${row * 8 + col}`)}
+					{@const i = row * 8 + col}
+					<div
+						class="piece"
+						on:click={(event) => {
+							event.stopPropagation();
+							handleClick(coords[i]);
+						}}
+						in:receive={{ key: piece?.id }}
+						out:send={{ key: piece?.id }}
+						animate:flip={{ duration: 300 }}
+					>
+						{#if piece != null}
+							<Piece
+								piece={piece}
+								selected={$game.selected != null && coordsEq($game.selected, coords[i])}
+								dropDown
+								floatUp={$game.ended}
+							/>
+						{/if}
+					</div>
+				{/each}
+			{/each}
+		</div>
+	</div>
+	<div class="taken-black">
+		{#each $game.takenBlack as piece (piece.id)}
+			<Piece piece={piece} dropDown floatUp={$game.ended} />
 		{/each}
 	</div>
 </div>
 
 <style>
-	.container {
+.container {
+		position: relative;
+		height: 480px;
+		margin: auto;
+	}
+
+	.taken-red {
+		position: absolute;
+		top: 0;
+		right: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap-reverse;
+	}
+
+	.taken-black {
+		position: absolute;
+		top: 0;
+		left: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+	}
+
+	.board-container {
 		position: relative;
 		width: max-content;
 		padding: 3rem;

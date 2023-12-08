@@ -39,22 +39,20 @@
 	.container {
 		position: relative;
 		transform-style: preserve-3d;
-		transition:
-			bottom 300ms,
-			transform 300ms;
+		transition: bottom 300ms, transform 300ms;
 	}
 
 	.container.selected {
-		bottom: 30px;
+		bottom: 15px;
 		transform: rotateX(12deg);
 	}
 
 	.container.drop-down {
-		animation: drop-down 600ms ease-out;
+		animation: drop-down 750ms ease-out;
 	}
 
 	.container.float-up {
-		animation: float-up 1200ms ease-in forwards;
+		animation: float-up 1800ms ease-in forwards;
 	}
 
 	.piece {
@@ -108,7 +106,7 @@
 
 	@keyframes drop-down {
 		0% {
-			bottom: 90px;
+			bottom: 120px;
 			transform: rotate3d(var(--x), var(--y), var(--z), var(--a));
 		}
 		50% {
@@ -139,12 +137,13 @@
 			transform: rotate3d(0, 0, 0, 0deg);
 		}
 		99% {
-			bottom: 180px;
+			bottom: 100vh;
 			transform: rotate3d(var(--x), var(--y), var(--z), var(--a));
 		}
 		100% {
 			bottom: 100vh;
 			transform: none;
+			display: none;
 		}
 	}
 </style>

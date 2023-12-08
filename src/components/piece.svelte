@@ -3,7 +3,7 @@
 	import { getRandomInt } from "../lib/utils";
 
   export let piece: ChessPiece;
-  export let highlighted: boolean = false;
+  export let selected: boolean = false;
   export let dropDown: boolean = false;
   export let floatUp: boolean = false;
 
@@ -16,7 +16,7 @@
 
 <div 
   class="container"
-  class:highlighted
+  class:selected
   class:drop-down={dropDown}
   class:float-up={floatUp}
   style:--x={x}
@@ -45,13 +45,13 @@
     transition: bottom 300ms, transform 300ms;
   }
   
-  .container.highlighted {
-    bottom: 15px;
+  .container.selected {
+    bottom: 30px;
     transform: rotateX(12deg);
   }
 
   .container.drop-down {
-    animation: drop-down 900ms ease-out;
+    animation: drop-down 600ms ease-out;
   }
 
   .container.float-up {
@@ -109,7 +109,7 @@
 
   @keyframes drop-down {
     0% {
-      bottom: 120px;
+      bottom: 60px;
       transform: rotate3d(var(--x), var(--y), var(--z), var(--a));
     }
     50% {

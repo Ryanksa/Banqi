@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { coordsIn, coordsEq } from '../lib/chess';
+	import { flip } from 'svelte/animate';
+	import { coordsIn, coordsEq, type Coord } from '../lib/chess';
+	import { send, receive } from "../lib/transition";
 	import { game } from '../stores/chess';
 	import Cell from './cell.svelte';
 	import Piece from './piece.svelte';
@@ -44,46 +46,86 @@
 	const bottomRightCornerIndices = [1, 3, 5, 7, 8, 14];
 	const leftLineAcrossIndices = [19, 28];
 	const rightLineAcrossIndices = [20, 27];
+
+	const handleClick = (coord: Coord) => {
+		$game.move(coord);
+		game.set($game);
+	};
+
+	$: board = $game.board.flat();
 </script>
 
 <div class="container">
-	{#each $game.board.flat() as piece, i (piece ? `p${piece.id}` : `e${i}`)}
-		<Cell
-			topLeftCorner={topLeftCornerIndices.includes(i)}
-			topRightCorner={topRightCornerIndices.includes(i)}
-			bottomLeftCorner={bottomLeftCornerIndices.includes(i)}
-			bottomRightCorner={bottomRightCornerIndices.includes(i)}
-			leftLineAcross={leftLineAcrossIndices.includes(i)}
-			rightLineAcross={rightLineAcrossIndices.includes(i)}
-			onClick={() => {
-				$game.move(coords[i]);
-				game.set($game);
-			}}
-			highlighted={coordsIn($game.movable, coords[i])}
-		>
-			{#if piece != null}
-				<Piece
-					dropDown 
-					piece={piece}
-					highlighted={$game.selected != null && coordsEq($game.selected, coords[i])}	
-				/>
-			{/if}
-		</Cell>
-	{/each}
+	<div class="board">
+		{#each board as _piece, i}
+			<Cell
+				topLeftCorner={topLeftCornerIndices.includes(i)}
+				topRightCorner={topRightCornerIndices.includes(i)}
+				bottomLeftCorner={bottomLeftCornerIndices.includes(i)}
+				bottomRightCorner={bottomRightCornerIndices.includes(i)}
+				leftLineAcross={leftLineAcrossIndices.includes(i)}
+				rightLineAcross={rightLineAcrossIndices.includes(i)}
+				onClick={() => handleClick(coords[i])}
+				highlighted={coordsIn($game.movable, coords[i])}
+			/>
+		{/each}
+	</div>
+	<div class="board pieces">
+		{#each board as piece, i (piece ? `p${piece.id}` : `e${i}`)}
+			<div
+				class="piece"
+				on:click={(event) => {
+					event.stopPropagation();
+					handleClick(coords[i]);
+				}}
+				in:receive={{ key: piece?.id }}
+				out:send={{ key: piece?.id }}
+				animate:flip={{ duration: 300 }}
+			>
+				{#if piece != null}
+					<Piece
+						dropDown
+						piece={piece}
+						selected={$game.selected != null && coordsEq($game.selected, coords[i])}	
+					/>
+				{/if}
+			</div>
+		{/each}
+	</div>
 </div>
 
 <style>
 	.container {
-		background-color: var(--wood);
+		position: relative;
 		width: max-content;
 		padding: 3rem;
 		margin: auto;
-		box-sizing: padding-box;
-		border-bottom: 3px solid var(--wood-shadow);
+		background-color: var(--wood);
 		box-shadow: 0 0 9px var(--wood-shadow);
+		border-bottom: 3px solid var(--wood-shadow);
+	}
+
+	.board {
+		box-sizing: padding-box;
 		display: grid;
 		grid-template-columns: repeat(8, 90px);
 		grid-template-rows: repeat(4, 90px);
 		gap: 2px;
+		cursor: pointer;
+	}
+
+	.board.pieces {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		translate: -50% -50%;
+	}
+	
+	.piece {
+		width: 90px;
+    height: 90px;
+    border: 2px solid transparent;
+    display: grid;
+		place-items: center;
 	}
 </style>

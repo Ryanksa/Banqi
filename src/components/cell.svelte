@@ -50,9 +50,6 @@
       style:display={rightLineAcross ? "block" : "none"}
     />
   </svg>
-  <div class="content">
-    <slot />
-  </div>
 </div>
 
 <style>
@@ -66,15 +63,5 @@
 
   .cell.highlighted {
     background-color: var(--highlight);
-  }
-
-  .content {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    display: grid;
-    place-items: center;
   }
 </style>

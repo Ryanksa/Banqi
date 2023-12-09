@@ -64,9 +64,9 @@
 
 	.header {
 		display: flex;
-		gap: 1rem;
-		justify-content: space-evenly;
+		gap: 12rem;
 		align-items: center;
 		font-size: 3rem;
+		margin: auto;
 	}
 </style>

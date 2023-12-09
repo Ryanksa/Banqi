@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { flip } from 'svelte/animate';
-	import { coordsIn, coordsEq, type Coord, ChessPieceType } from '../lib/chess';
+	import { coordsIn, coordsEq, type Coord } from '../lib/chess';
 	import { send, receive } from "../lib/transition";
 	import { game } from '../stores/chess';
 	import Cell from './cell.svelte';
@@ -95,7 +95,7 @@
 							<Piece
 								piece={piece}
 								selected={$game.selected != null && coordsEq($game.selected, coords[i])}
-								dropDown
+								dropDown={piece.isHidden}
 								floatUp={$game.ended}
 							/>
 						{/if}

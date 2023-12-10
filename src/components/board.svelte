@@ -95,7 +95,7 @@
 							<Piece
 								piece={piece}
 								selected={$game.selected != null && coordsEq($game.selected, coords[i])}
-								dropDown={piece.isHidden}
+								dropDown
 								floatUp={$game.ended}
 							/>
 						{/if}

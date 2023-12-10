@@ -39,12 +39,16 @@
 	.container {
 		position: relative;
 		transform-style: preserve-3d;
+		bottom: var(--bottom);
+		transform: var(--transform);
 		transition: bottom 300ms, transform 300ms;
+		--bottom: 0;
+		--transform: none;
 	}
 
 	.container.selected {
-		bottom: 15px;
-		transform: rotateX(12deg);
+		--bottom: 15px;
+		--transform: rotateX(12deg);
 	}
 
 	.container.drop-down {
@@ -110,31 +114,31 @@
 			transform: rotate3d(var(--x), var(--y), var(--z), var(--a));
 		}
 		50% {
-			bottom: 6px;
+			bottom: var(--bottom);
 			transform: rotate3d(2, 3, 1, -30deg);
 		}
 		60% {
-			bottom: 4.5px;
+			bottom: var(--bottom);
 			transform: rotate3d(2, -1, 0, 24deg);
 		}
 		75% {
-			bottom: 3px;
+			bottom: var(--bottom);
 			transform: rotate3d(3, 1, 0, 24deg);
 		}
 		90% {
-			bottom: 1.5px;
+			bottom: var(--bottom);
 			transform: rotate3d(3, 1, 0, 6deg);
 		}
 		100% {
-			bottom: 0;
-			transform: rotate3d(0, 0, 0, 0deg);
+			bottom: var(--bottom);
+			transform: var(--transform);
 		}
 	}
 
 	@keyframes float-up {
 		0% {
-			bottom: 0px;
-			transform: rotate3d(0, 0, 0, 0deg);
+			bottom: var(--bottom);
+			transform: var(--transform);
 		}
 		99% {
 			bottom: 100vh;
